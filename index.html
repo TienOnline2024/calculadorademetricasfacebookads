@@ -5,330 +5,568 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Calculadora Facebook Ads (COP) — Tienda / Dropshipping</title>
   <style>
-    :root{--bg:#0f1724;--card:#0b1220;--muted:#9aa4b2;--accent:#06b6d4;--good:#10b981;--bad:#ef4444}
-    *{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial}
-    body{background:linear-gradient(180deg,#071124 0%,#071827 100%);color:#e6eef6;margin:0;padding:28px}
-    .wrap{max-width:980px;margin:0 auto}
-    header{display:flex;gap:16px;align-items:center;justify-content:space-between}
-    h1{font-size:20px;margin:0}
-    .card{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,.6);margin-top:18px}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
-    input[type="text"],input[type="number"],select{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,.04);background:transparent;color:inherit}
-    .row{display:flex;gap:8px}
-    .full{grid-column:1/3}
-    .muted{color:var(--muted);font-size:13px}
-    .result{display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:8px;background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);margin-top:8px}
-    .big{font-size:18px;font-weight:700}
-    .small{font-size:13px;color:var(--muted)}
-    .alert{padding:12px;border-radius:8px;margin-top:12px}
-    .btn{background:var(--accent);border:none;padding:10px 12px;border-radius:8px;color:#042025;font-weight:600;cursor:pointer}
-    .toggles{display:flex;gap:8px}
-    .footer{margin-top:14px;color:var(--muted);font-size:13px}
-    @media (max-width:820px){.grid{grid-template-columns:1fr}.full{grid-column:1}}
+    :root{
+      --accent:#0ea5a4;
+      --danger:#ef4444;
+      --good:#10b981;
+      --bg:#0f172a;
+      --card:#0b1220;
+      --muted:#94a3b8;
+      color-scheme: dark;
+    }
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:linear-gradient(180deg,#071023 0%, #071422 100%); color:#e6eef8;}
+    .container{max-width:1100px;margin:28px auto;padding:22px;background:rgba(255,255,255,0.02);border-radius:12px;box-shadow:0 6px 30px rgba(2,6,23,0.7);}
+    h1{margin:0 0 8px;font-size:20px;}
+    p.lead{color:var(--muted);margin:0 0 16px;}
+    .grid{display:grid;grid-template-columns:1fr 380px;gap:18px;}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);}
+    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;}
+    input[type="text"], input[type="number"], select, input[type="date"]{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;box-sizing:border-box;}
+    .row{display:flex;gap:8px;align-items:center;}
+    .row > *{flex:1;}
+    .small{font-size:13px;color:var(--muted);}
+    button{background:var(--accent);color:#042022;padding:8px 10px;border-radius:8px;border:none;cursor:pointer;font-weight:600;}
+    button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
+    .table-wrap{overflow:auto;max-height:280px;margin-top:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);}
+    table{width:100%;border-collapse:collapse;font-size:13px;}
+    th,td{padding:8px;text-align:left;border-bottom:1px dashed rgba(255,255,255,0.02);}
+    th{position:sticky;top:0;background:rgba(2,6,23,0.6);backdrop-filter:blur(4px)}
+    .controls{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
+    .bad{background:linear-gradient(90deg,#3b0f0f,#2b0b0b);color:var(--danger);padding:10px;border-radius:8px;font-weight:700;}
+    .good{background:linear-gradient(90deg,#06331f,#042a1b);color:var(--good);padding:10px;border-radius:8px;font-weight:700;}
+    .metric{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;margin-bottom:8px;border:1px solid rgba(255,255,255,0.02)}
+    .metric .label{color:var(--muted);font-size:13px}
+    .metric .value{font-size:18px;font-weight:700}
+    .muted-note{font-size:13px;color:var(--muted);margin-top:6px}
+    .flex-col{display:flex;flex-direction:column;gap:8px}
+    .mode-toggle{display:flex;gap:8px}
+    .chip{padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);cursor:pointer}
+    .chip.active{background:var(--accent);color:#022; font-weight:700}
+    .danger-text{color:var(--danger);font-weight:700}
+    .ok-text{color:var(--good);font-weight:700}
+    footer{margin-top:12px;color:var(--muted);font-size:13px}
+    @media(max-width:980px){.grid{grid-template-columns:1fr;}}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <h1>Calculadora Facebook Ads (COP) — Tienda / Dropshipping</h1>
-      <div class="muted">Formato automático en pesos colombianos</div>
-    </header>
+  <div class="container" role="main">
+    <h1>Calculadora Facebook Ads — COP</h1>
+    <p class="lead">Calcula ROAS, CAC, margen y salud de campaña para <strong>Tienda propia</strong> o <strong>Dropshipping</strong>. Usa tabla diaria (recomendado) o ingresa totales por rango.</p>
 
-    <section class="card">
-      <div class="grid">
-        <div>
-          <label>Rango de fechas</label>
-          <select id="rangeSelect">
-            <option value="today">Hoy</option>
-            <option value="yesterday">Ayer</option>
-            <option value="7">Últimos 7 días</option>
-            <option value="14">Últimos 14 días</option>
-            <option value="custom">Personalizado (ingresa totales manuales)</option>
-          </select>
-          <div class="muted" style="margin-top:8px">Si eliges un rango, introduce los totales para ese rango en los campos de abajo (ventas totales, gasto publicitario, conversiones totales).</div>
-        </div>
-
-        <div>
-          <label>Modo</label>
-          <div class="toggles">
-            <button id="modeStore" class="btn" style="background:transparent;color:var(--accent);border:1px solid rgba(255,255,255,.04);">Tienda propia</button>
-            <button id="modeDrops" class="btn" style="background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,.04);">Dropshipping</button>
-          </div>
-          <div class="muted" style="margin-top:8px">Tienda propia considera inventario y precio de bodega. Dropshipping omite costos de bodega.</div>
-        </div>
-
-        <div>
-          <label>Cantidad de productos vendidos (total en rango)</label>
-          <input id="sold" type="number" min="0" step="1" value="0" />
-        </div>
-
-        <div>
-          <label>Precio de venta unitario (COP)</label>
-          <input id="priceSell" type="text" inputmode="numeric" placeholder="$139.900" />
-        </div>
-
-        <div id="warehouseWrap">
-          <label>Precio de bodega / costo por unidad (si aplica) (COP)</label>
-          <input id="priceCost" type="text" inputmode="numeric" placeholder="$0" />
-        </div>
-
-        <div>
-          <label>Gasto publicitario total en el rango (COP)</label>
-          <input id="adSpend" type="text" inputmode="numeric" placeholder="$0" />
-        </div>
-
-        <div>
-          <label>Conversiones / clientes adquiridos (total en rango)</label>
-          <input id="conversions" type="number" min="0" value="0" />
-        </div>
-
-        <div class="full">
-          <label>Notas (opcional)</label>
-          <input id="notes" type="text" placeholder="Ej: campaña tráfico web / campaña mensajes" />
-        </div>
-
-        <div class="full" style="display:flex;gap:8px;align-items:center;justify-content:flex-end">
-          <button id="calcBtn" class="btn">Calcular</button>
-          <button id="resetBtn" class="btn" style="background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,.04);">Limpiar</button>
-        </div>
-
-        <div class="full">
-          <div class="result">
+    <div class="grid">
+      <div>
+        <div class="card">
+          <div class="row" style="gap:12px;">
             <div>
-              <div class="small">Ingresos reales</div>
-              <div id="revenue" class="big">$0</div>
+              <label>Modo</label>
+              <div class="mode-toggle">
+                <div class="chip active" id="modeStore">Tienda propia</div>
+                <div class="chip" id="modeDropship">Dropshipping</div>
+              </div>
             </div>
             <div>
-              <div class="small">Margen de ganancia promedio</div>
-              <div id="margin" class="big">0%</div>
-            </div>
-            <div>
-              <div class="small">ROAS</div>
-              <div id="roas" class="big">0x</div>
-            </div>
-            <div>
-              <div class="small">Costo por adquisición (CAC)</div>
-              <div id="cac" class="big">$0</div>
+              <label>Formato moneda</label>
+              <select id="currencyFormat" title="Formato">
+                <option value="COP" selected>COP — $</option>
+              </select>
             </div>
           </div>
 
-          <div id="alertBox" class="alert" style="display:none"></div>
+          <hr style="opacity:0.06;margin:12px 0;">
 
-          <div class="footer">Consejos: los umbrales son configurables. Por defecto:
-            <ul>
-              <li>ROAS &lt; 1.5 → salud negativa.</li>
-              <li>Margen bruto &lt; 15% → revisar precios o costos.</li>
-              <li>CAC mayor a (precio venta * 0.4) → adquisición cara (ej: para un producto $100.000, CAC óptimo podría ser &lt; $40.000).</li>
-            </ul>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <div style="flex:1;min-width:170px;">
+              <label>Rango</label>
+              <div class="controls">
+                <button class="chip active" data-range="today">Hoy</button>
+                <button class="chip" data-range="yesterday">Ayer</button>
+                <button class="chip" data-range="7">Últimos 7 días</button>
+                <button class="chip" data-range="14">Últimos 14 días</button>
+                <button class="chip" id="customRangeBtn" data-range="custom">Custom</button>
+              </div>
+            </div>
+            <div style="min-width:200px;">
+              <label>Fecha desde / hasta (custom)</label>
+              <div class="row">
+                <input type="date" id="dateFrom">
+                <input type="date" id="dateTo">
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:10px;">
+            <label>Modo de ingreso</label>
+            <div class="controls">
+              <button id="useDaily" class="chip active">Ingresos diarios (tabla)</button>
+              <button id="useTotals" class="chip">Ingresos totales (por rango)</button>
+            </div>
+            <div class="muted-note">Si tienes datos por día (lo ideal): usa la tabla. Si no, usa "Ingresos totales" y completa los campos totales para el rango seleccionado.</div>
+          </div>
+
+          <div id="totalsInputs" style="display:none;margin-top:10px;">
+            <label>Ingresos totales y métricas (para rango seleccionado)</label>
+            <div class="row">
+              <input type="text" id="totalRevenue" placeholder="Ingresos totales (ej. 139900)">
+              <input type="number" id="totalPurchases" placeholder="Compras (unidades)">
+            </div>
+            <div class="row" style="margin-top:6px;">
+              <input type="text" id="totalAdSpend" placeholder="Gasto total en ads (ej. 100000)">
+              <input type="number" id="totalClicks" placeholder="Clicks totales">
+            </div>
+          </div>
+
+          <hr style="opacity:0.06;margin:12px 0;">
+
+          <div>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <div style="flex:1;">
+                <label>Precio de venta por unidad (COP)</label>
+                <input type="text" id="priceSale" placeholder="ej. 139900">
+              </div>
+              <div style="flex:1;">
+                <label>Precio de bodega por unidad (si aplica – COP)</label>
+                <input type="text" id="priceWarehouse" placeholder="ej. 75.000">
+              </div>
+            </div>
+
+            <div style="display:flex;gap:8px;margin-top:8px;">
+              <div style="flex:1;">
+                <label>Cantidad vendida (para rango)</label>
+                <input type="number" id="quantitySold" min="0" value="0">
+              </div>
+              <div style="flex:1;">
+                <label>Costos adicionales por unidad (envío/packaging COP)</label>
+                <input type="text" id="costsExtra" placeholder="ej. 8.000">
+              </div>
+            </div>
+            <div class="muted-note">Si estás en Dropshipping, el precio de bodega se ignorará (usa margen distinto automáticamente).</div>
+          </div>
+
+          <hr style="opacity:0.06;margin:12px 0;">
+
+          <div class="flex-col">
+            <label style="margin-bottom:4px">Tabla de datos por día</label>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <button id="addRow" class="ghost">+ Añadir fila</button>
+              <button id="fillSample" class="ghost">Rellenar muestra</button>
+              <button id="clearTable" class="ghost">Limpiar</button>
+              <div style="flex:1;text-align:right;color:var(--muted);font-size:13px">Filtra por rango arriba</div>
+            </div>
+
+            <div class="table-wrap" id="tableWrap">
+              <table id="dailyTable" aria-label="Tabla diaria">
+                <thead>
+                  <tr>
+                    <th style="width:120px">Fecha</th>
+                    <th>Impresiones</th>
+                    <th>Clicks</th>
+                    <th>Gasto Ads (COP)</th>
+                    <th>Compras</th>
+                    <th>Ingresos (COP)</th>
+                    <th style="width:60px">Acción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- filas dinámicas -->
+                </tbody>
+              </table>
+            </div>
+            <div class="muted-note">Puedes agregar una fila por cada día y luego seleccionar el rango para calcular.</div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px;" class="card">
+          <h3 style="margin:0 0 8px;">Resultados</h3>
+          <div id="alerts"></div>
+
+          <div id="metrics">
+            <div class="metric"><div class="label">Ingresos totales</div><div class="value" id="mRevenue">$ 0</div></div>
+            <div class="metric"><div class="label">Gasto Ads</div><div class="value" id="mAdSpend">$ 0</div></div>
+            <div class="metric"><div class="label">Compras</div><div class="value" id="mPurchases">0</div></div>
+            <div class="metric"><div class="label">ROAS (ingreso / gasto)</div><div class="value" id="mRoas">0.00</div></div>
+            <div class="metric"><div class="label">CAC / CPA (costo por adquisición)</div><div class="value" id="mCac">$ 0</div></div>
+            <div class="metric"><div class="label">Margen promedio (%)</div><div class="value" id="mMargin">0%</div></div>
+            <div class="metric"><div class="label">Beneficio neto total (COP)</div><div class="value" id="mProfit">$ 0</div></div>
+            <div class="metric"><div class="label">CPC promedio</div><div class="value" id="mCpc">$ 0</div></div>
+          </div>
+
+          <hr style="opacity:0.06;margin:12px 0;">
+
+          <div>
+            <h4 style="margin:0 0 8px">Recomendaciones</h4>
+            <ul id="recommendations" style="margin:0 0 0 18px;color:var(--muted)"></ul>
           </div>
         </div>
 
       </div>
-    </section>
 
-    <section class="card">
-      <h3 style="margin:0 0 8px 0">Detalles y desglose</h3>
-      <div id="breakdown" class="muted">No calculado aún.</div>
-    </section>
+      <aside>
+        <div class="card">
+          <h3 style="margin:0 0 8px">Resumen rápido</h3>
+          <div id="summary">
+            <div class="metric"><div class="label">Modo</div><div class="value" id="sMode">Tienda propia</div></div>
+            <div class="metric"><div class="label">Rango</div><div class="value" id="sRange">Hoy</div></div>
+            <div class="metric"><div class="label">Promedio diario ingresos</div><div class="value" id="sAvgRev">$ 0</div></div>
+            <div class="metric"><div class="label">Promedio diario compras</div><div class="value" id="sAvgPurch">0</div></div>
+          </div>
+          <div style="margin-top:10px;">
+            <button id="copyReport">Copiar resumen</button>
+            <button id="exportCSV" class="ghost">Exportar CSV</button>
+          </div>
+          <div class="muted-note" style="margin-top:8px">Nota: esta herramienta no conecta automáticamente con Facebook Ads. Para análisis histórico debes volcar filas diarias o totales.</div>
+        </div>
 
-    <section class="card" style="margin-bottom:40px">
-      <h3 style="margin:0 0 8px 0">Exportar / Compartir</h3>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button id="exportCsv" class="btn">Exportar CSV</button>
-        <button id="copyShare" class="btn">Copiar resumen</button>
-      </div>
-    </section>
+        <div style="margin-top:12px;" class="card">
+          <h4 style="margin:0 0 8px">Heurísticas usadas</h4>
+          <ul style="color:var(--muted);margin:0 0 0 18px">
+            <li>ROAS < 1 → campaña negativa.</li>
+            <li>Margen neto < 10% → riesgo (baja rentabilidad).</li>
+            <li>CAC mayor al 50% del precio de venta → advertencia.</li>
+            <li>ROAS entre 1 y 2 → mejorar creatividad/segmentación.</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
 
-    <footer class="muted">Creado para ayudarte a medir ROAS, CAC, margen y salud de campañas Facebook Ads. Si quieres, puedo añadir integración con un API para traer datos automáticamente (se requiere token de Facebook/Meta Ads).</footer>
-
+    <footer>Creado para tus campañas — formatea valores con puntos automáticamente. Ajusta reglas de alerta en el script si lo deseas.</footer>
   </div>
 
-  <script>
-    // Helpers
-    const $ = id => document.getElementById(id);
-    const formatCOP = (n) => {
-      if (isNaN(n) || n === null) return '$0';
-      // Round to integer pesos
-      const v = Math.round(n);
-      return '$' + v.toLocaleString('es-CO');
+<script>
+/* Utilidades */
+function onlyDigits(str){
+  return (str||'').toString().replace(/[^0-9]/g,'');
+}
+function formatCOP(v){
+  if(isNaN(v) || v === null) return '$ 0';
+  const n = Math.round(Number(v));
+  return new Intl.NumberFormat('es-CO').format(n).replace(/\u00A0/g,' ');
+}
+function parseCOP(inp){
+  if(!inp) return 0;
+  const n = parseInt(onlyDigits(inp));
+  return isNaN(n) ? 0 : n;
+}
+
+/* Estado */
+let mode = 'store'; // 'store' or 'dropship'
+let useTotals = false;
+let activeRange = 'today'; // today, yesterday, 7, 14, custom
+let customFrom = null, customTo = null;
+
+/* DOM */
+const modeStoreBtn = document.getElementById('modeStore');
+const modeDropshipBtn = document.getElementById('modeDropship');
+const chips = document.querySelectorAll('[data-range]');
+const customRangeBtn = document.getElementById('customRangeBtn');
+const dateFrom = document.getElementById('dateFrom'), dateTo = document.getElementById('dateTo');
+const useDailyBtn = document.getElementById('useDaily'), useTotalsBtn = document.getElementById('useTotals');
+const totalsInputs = document.getElementById('totalsInputs');
+
+const priceSaleInput = document.getElementById('priceSale');
+const priceWhInput = document.getElementById('priceWarehouse');
+const qtySoldInput = document.getElementById('quantitySold');
+const costsExtraInput = document.getElementById('costsExtra');
+
+const addRowBtn = document.getElementById('addRow');
+const fillSampleBtn = document.getElementById('fillSample');
+const clearTableBtn = document.getElementById('clearTable');
+const dailyTableBody = document.querySelector('#dailyTable tbody');
+
+const totalRevenueInput = document.getElementById('totalRevenue');
+const totalPurchasesInput = document.getElementById('totalPurchases');
+const totalAdSpendInput = document.getElementById('totalAdSpend');
+const totalClicksInput = document.getElementById('totalClicks');
+
+const alertsDiv = document.getElementById('alerts');
+const recommendationsEl = document.getElementById('recommendations');
+
+const mRevenue = document.getElementById('mRevenue');
+const mAdSpend = document.getElementById('mAdSpend');
+const mPurchases = document.getElementById('mPurchases');
+const mRoas = document.getElementById('mRoas');
+const mCac = document.getElementById('mCac');
+const mMargin = document.getElementById('mMargin');
+const mProfit = document.getElementById('mProfit');
+const mCpc = document.getElementById('mCpc');
+
+const sMode = document.getElementById('sMode');
+const sRange = document.getElementById('sRange');
+const sAvgRev = document.getElementById('sAvgRev');
+const sAvgPurch = document.getElementById('sAvgPurch');
+
+const copyReportBtn = document.getElementById('copyReport');
+const exportCSVBtn = document.getElementById('exportCSV');
+
+/* Inicial */
+modeStoreBtn.addEventListener('click', ()=>setMode('store'));
+modeDropshipBtn.addEventListener('click', ()=>setMode('dropship'));
+
+function setMode(m){
+  mode = m;
+  if(m==='store'){ modeStoreBtn.classList.add('active'); modeDropshipBtn.classList.remove('active'); sMode.textContent='Tienda propia'; }
+  else { modeDropshipBtn.classList.add('active'); modeStoreBtn.classList.remove('active'); sMode.textContent='Dropshipping'; }
+  recalc();
+}
+
+/* Range chips */
+chips.forEach(ch=>{
+  ch.addEventListener('click', ()=>{
+    chips.forEach(c=>c.classList.remove('active'));
+    ch.classList.add('active');
+    activeRange = ch.getAttribute('data-range');
+    sRange.textContent = (activeRange==='today'?'Hoy': activeRange==='yesterday'?'Ayer': activeRange==='7'?'Últimos 7 días': activeRange==='14'?'Últimos 14 días':'Custom');
+    if(activeRange!=='custom'){
+      dateFrom.value=''; dateTo.value='';
     }
-    const parseCOP = (str) => {
-      if (typeof str === 'number') return str;
-      if (!str) return 0;
-      // remove everything except digits
-      const clean = String(str).replace(/[^0-9]/g,'');
-      return clean ? parseInt(clean,10) : 0;
+    recalc();
+  });
+});
+dateFrom.addEventListener('change', ()=>{
+  activeRange='custom'; chips.forEach(c=>c.classList.remove('active')); customRangeBtn.classList.add('active'); customFrom=dateFrom.value; recalc();
+});
+dateTo.addEventListener('change', ()=>{ customTo=dateTo.value; activeRange='custom'; chips.forEach(c=>c.classList.remove('active')); customRangeBtn.classList.add('active'); recalc(); });
+
+useDailyBtn.addEventListener('click', ()=>{ useTotals=false; useDailyBtn.classList.add('active'); useTotalsBtn.classList.remove('active'); totalsInputs.style.display='none'; recalc(); });
+useTotalsBtn.addEventListener('click', ()=>{ useTotals=true; useTotalsBtn.classList.add('active'); useDailyBtn.classList.remove('active'); totalsInputs.style.display='block'; recalc(); });
+
+/* Table manipulation */
+function addRow(data = null){
+  const tr = document.createElement('tr');
+  const today = new Date();
+  const defaultDate = data && data.date ? data.date : today.toISOString().slice(0,10);
+  tr.innerHTML = `
+    <td><input type="date" class="r-date" value="${defaultDate}"></td>
+    <td><input type="number" class="r-impr" min="0" value="${data ? data.impr || 0 : 0}"></td>
+    <td><input type="number" class="r-clicks" min="0" value="${data ? data.clicks || 0 : 0}"></td>
+    <td><input type="text" class="r-ad" value="${data ? data.ad || '' : ''}" placeholder="Gasto (ej.100000)"></td>
+    <td><input type="number" class="r-purchases" min="0" value="${data ? data.purchases || 0 : 0}"></td>
+    <td><input type="text" class="r-rev" value="${data ? data.revenue || '' : ''}" placeholder="Ingresos (ej.139900)"></td>
+    <td><button class="rowDel">X</button></td>
+  `;
+  dailyTableBody.appendChild(tr);
+  tr.querySelector('.rowDel').addEventListener('click', ()=>{ tr.remove(); recalc(); });
+  // listen changes
+  ['input'].forEach(ev=>{
+    tr.querySelectorAll('input').forEach(inp=>inp.addEventListener('input', recalc));
+  });
+  recalc();
+}
+
+addRowBtn.addEventListener('click', ()=>addRow());
+
+fillSampleBtn.addEventListener('click', ()=>{
+  const sample = [
+    {date: offsetDateStr(0), impr:1200, clicks:140, ad:30000, purchases:4, revenue:139900*4},
+    {date: offsetDateStr(-1), impr:900, clicks:90, ad:22000, purchases:2, revenue:139900*2},
+    {date: offsetDateStr(-2), impr:1500, clicks:200, ad:40000, purchases:5, revenue:139900*5},
+    {date: offsetDateStr(-3), impr:700, clicks:70, ad:15000, purchases:1, revenue:139900*1},
+  ];
+  sample.forEach(s=>addRow(s));
+  recalc();
+});
+
+clearTableBtn.addEventListener('click', ()=>{
+  dailyTableBody.innerHTML='';
+  recalc();
+});
+
+/* helper */
+function offsetDateStr(days){
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0,10);
+}
+
+/* Format inputs auto */
+[priceSaleInput, priceWhInput, costsExtraInput, totalRevenueInput, totalAdSpendInput].forEach(inp=>{
+  inp.addEventListener('input', (e)=>{
+    const cursor = inp.selectionStart;
+    const raw = onlyDigits(inp.value);
+    if(raw==='') { inp.value=''; recalc(); return; }
+    inp.value = formatCOP(raw).replace(/\s+/g,'').replace(/(\d)(?=(\d{3})+$)/g, '$1'); // keep digits visually; we'll parse with parseCOP
+    // simpler: leave final formatting on blur
+  });
+  inp.addEventListener('blur', ()=>{
+    const v = parseCOP(inp.value);
+    inp.value = v ? formatCOP(v) : '';
+    recalc();
+  });
+});
+
+/* Recalc core */
+function recalc(){
+  // read base inputs
+  const priceSale = parseCOP(priceSaleInput.value);
+  const priceWh = parseCOP(priceWhInput.value);
+  const qtySold = Number(qtySoldInput.value) || 0;
+  const extraUnit = parseCOP(costsExtraInput.value);
+  const isDropship = (mode === 'dropship');
+
+  // collect rows filtered by range
+  const rows = Array.from(dailyTableBody.querySelectorAll('tr')).map(tr=>{
+    return {
+      date: tr.querySelector('.r-date').value,
+      impr: Number(tr.querySelector('.r-impr').value) || 0,
+      clicks: Number(tr.querySelector('.r-clicks').value) || 0,
+      ad: parseCOP(tr.querySelector('.r-ad').value),
+      purchases: Number(tr.querySelector('.r-purchases').value) || 0,
+      revenue: parseCOP(tr.querySelector('.r-rev').value)
+    };
+  });
+
+  const filtered = filterByRange(rows);
+
+  let totalRevenue = 0, totalAd = 0, totalPurchases = 0, totalClicks = 0, totalImpr=0;
+  if(useTotals){
+    totalRevenue = parseCOP(totalRevenueInput.value);
+    totalAd = parseCOP(totalAdSpendInput.value);
+    totalPurchases = Number(totalPurchasesInput.value) || 0;
+    totalClicks = Number(totalClicksInput.value) || 0;
+  } else {
+    filtered.forEach(r=>{ totalRevenue += r.revenue; totalAd += r.ad; totalPurchases += r.purchases; totalClicks += r.clicks; totalImpr += r.impr; });
+  }
+
+  // If user left quantity sold but not per-day purchases, prefer explicit qtySold
+  if(qtySold > 0 && totalPurchases === 0){
+    totalPurchases = qtySold;
+  }
+
+  // Cost of goods: for dropship we assume "supplier cost" equals priceWh input; for store it is priceWh as bodega.
+  const unitCost = isDropship ? priceWh : priceWh;
+  const cogs = (unitCost + extraUnit) * totalPurchases; // costo de ventas totales
+  const grossProfit = totalRevenue - cogs;
+  const roas = totalAd === 0 ? 0 : (totalRevenue / totalAd);
+  const cac = totalPurchases === 0 ? 0 : Math.round(totalAd / totalPurchases);
+  const cpc = totalClicks === 0 ? 0 : Math.round(totalAd / totalClicks);
+  const marginPercent = totalRevenue === 0 ? 0 : Math.round((grossProfit / totalRevenue) * 100);
+  const netProfit = grossProfit - 0; // si hay otros costes se restan aquí.
+  // If store mode, we may subtract inventory restocking fees, but left as is.
+
+  // Update UI with formatted values
+  mRevenue.textContent = formatCOP(totalRevenue);
+  mAdSpend.textContent = formatCOP(totalAd);
+  mPurchases.textContent = totalPurchases;
+  mRoas.textContent = (roas === 0 ? '0.00' : roas.toFixed(2));
+  mCac.textContent = (cac ? formatCOP(cac) : '$ 0');
+  mMargin.textContent = marginPercent + ' %';
+  mProfit.textContent = formatCOP(netProfit);
+  mCpc.textContent = (cpc ? formatCOP(cpc) : '$ 0');
+
+  // summary averages
+  const daysCount = Math.max(1, getRangeDays(filtered));
+  sAvgRev.textContent = formatCOP(Math.round(totalRevenue / daysCount));
+  sAvgPurch.textContent = (Math.round(totalPurchases / daysCount * 100)/100).toString();
+
+  // Alerts & recommendations
+  const recs = [];
+  alertsDiv.innerHTML = '';
+  // Heurísticas (ajustables)
+  let healthBad = false;
+  if(roas < 1 && totalAd > 0){ healthBad = true; alertsDiv.innerHTML += `<div class="bad">Campaña con <strong>ROAS &lt; 1</strong> — estás gastando más de lo que generas.</div>`; recs.push('Reduce inversión en audiencia poco rentable, mejora creativos, revisa landing page.'); }
+  else if(roas >=1 && roas < 2){ alertsDiv.innerHTML += `<div class="bad" style="background:linear-gradient(90deg,#3b1b0f,#24110b)">ROAS débil (${roas.toFixed(2)}) — rentable pero frágil.</div>`; recs.push('Optimiza segmentación y pujas; prueba A/B en creativos'); }
+  else if(roas >= 2){ alertsDiv.innerHTML += `<div class="good">Campaña rentable (ROAS ${roas.toFixed(2)}). Mantén o escala gradualmente.</div>`; recs.push('Considera escalar inversión en audiencias similares y medir saturación.'); }
+
+  if(marginPercent < 10){ healthBad = true; alertsDiv.innerHTML += `<div class="bad">Margen neto bajo (${marginPercent}%) — riesgo de no ser sostenible.</div>`; recs.push('Revisa precios o reduce costos de producto/envío; aumenta AOV.'); }
+  if(cac > priceSale * 0.5 && priceSale>0){ healthBad = true; alertsDiv.innerHTML += `<div class="bad">CAC alto (${formatCOP(cac)}) — >50% del precio de venta.</div>`; recs.push('Revisa funnels, aumenta tasa de conversión o baja CPC.'); }
+  if(totalPurchases === 0 && totalAd>0){ alertsDiv.innerHTML += `<div class="bad">No hay compras registradas para el gasto en ads.</div>`; recs.push('Revisa eventos de conversión, verificaciones de pixel y landing.'); }
+
+  if(!alertsDiv.innerHTML){ alertsDiv.innerHTML = `<div class="good">Sin alertas críticas — datos limitados o campaña equilibrada.</div>`; }
+
+  // provide more detailed recommendations
+  recommendationsEl.innerHTML = '';
+  const uniqueRecs = Array.from(new Set(recs));
+  if(uniqueRecs.length === 0) uniqueRecs.push('Sin recomendaciones específicas. Considera recolectar más datos diarios.');
+  uniqueRecs.forEach(r=>{ const li=document.createElement('li'); li.textContent = r; recommendationsEl.appendChild(li); });
+
+  // update small text
+  sMode.textContent = mode==='store' ? 'Tienda propia' : 'Dropshipping';
+}
+
+/* filter rows by selected range */
+function filterByRange(rows){
+  if(useTotals) return rows; // totals mode uses provided totals, but we still want daysCount possibly
+  const today = new Date(); zeroTime(today);
+  let start = null, end = null;
+  if(activeRange === 'today'){ start = new Date(today); end = new Date(today); }
+  else if(activeRange==='yesterday'){ start = new Date(today); start.setDate(start.getDate()-1); end = new Date(start); }
+  else if(activeRange==='7'){ start = new Date(today); start.setDate(start.getDate()-6); end = new Date(today); }
+  else if(activeRange==='14'){ start = new Date(today); start.setDate(start.getDate()-13); end = new Date(today); }
+  else if(activeRange==='custom'){
+    if(dateFrom.value) start = new Date(dateFrom.value);
+    if(dateTo.value) end = new Date(dateTo.value);
+    if(start && !end) end = new Date(start);
+    if(!start && end) start = new Date(end);
+  } else {
+    // default use all rows
+    return rows;
+  }
+  if(!start || !end) return rows;
+  zeroTime(start); zeroTime(end);
+  // include rows whose date between start and end inclusive
+  return rows.filter(r=>{
+    if(!r.date) return false;
+    const d = new Date(r.date); zeroTime(d);
+    return d >= start && d <= end;
+  });
+}
+function zeroTime(d){ d.setHours(0,0,0,0); }
+
+function getRangeDays(filteredRows){
+  if(useTotals){
+    // if totals mode and user provided dateFrom/dateTo, compute days
+    if(activeRange==='7') return 7;
+    if(activeRange==='14') return 14;
+    if(activeRange==='today' || activeRange==='yesterday') return 1;
+    if(activeRange==='custom' && dateFrom.value && dateTo.value){
+      const f = new Date(dateFrom.value), t = new Date(dateTo.value); zeroTime(f); zeroTime(t);
+      const diff = Math.max(1, Math.round((t - f)/(1000*60*60*24)) + 1);
+      return diff;
     }
+    return 1;
+  } else {
+    // distinct dates in filtered rows or at least 1
+    const set = new Set(filteredRows.map(r=>r.date).filter(Boolean));
+    return Math.max(1, set.size);
+  }
+}
 
-    // Elements
-    const sold = $('sold');
-    const priceSell = $('priceSell');
-    const priceCost = $('priceCost');
-    const adSpend = $('adSpend');
-    const conversions = $('conversions');
-    const rangeSelect = $('rangeSelect');
-    const calcBtn = $('calcBtn');
-    const resetBtn = $('resetBtn');
-    const revenueEl = $('revenue');
-    const marginEl = $('margin');
-    const roasEl = $('roas');
-    const cacEl = $('cac');
-    const alertBox = $('alertBox');
-    const breakdown = $('breakdown');
-    const modeStore = $('modeStore');
-    const modeDrops = $('modeDrops');
-    const warehouseWrap = $('warehouseWrap');
-    const exportCsv = $('exportCsv');
-    const copyShare = $('copyShare');
+/* copy summary */
+copyReportBtn.addEventListener('click', ()=>{
+  const text = `Resumen (${sMode.textContent}, ${sRange.textContent})
+Ingresos: ${mRevenue.textContent}
+Gasto Ads: ${mAdSpend.textContent}
+Compras: ${mPurchases.textContent}
+ROAS: ${mRoas.textContent}
+CAC: ${mCac.textContent}
+Margen: ${mMargin.textContent}
+Beneficio neto: ${mProfit.textContent}
+Recomendaciones: ${Array.from(recommendationsEl.querySelectorAll('li')).map(l=>l.textContent).join('; ')}`;
+  navigator.clipboard.writeText(text).then(()=>alert('Resumen copiado al portapapeles.'));
+});
 
-    // State
-    let mode = 'store';
-    modeStore.addEventListener('click',()=>{mode='store'; modeStore.style.color='var(--accent)'; modeDrops.style.color='var(--muted)'; warehouseWrap.style.display='block';});
-    modeDrops.addEventListener('click',()=>{mode='drops'; modeDrops.style.color='var(--accent)'; modeStore.style.color='var(--muted)'; warehouseWrap.style.display='none';});
+/* Export CSV (toma las filas de la tabla) */
+exportCSVBtn.addEventListener('click', ()=>{
+  const rows = Array.from(dailyTableBody.querySelectorAll('tr')).map(tr=>{
+    return [
+      tr.querySelector('.r-date').value,
+      tr.querySelector('.r-impr').value,
+      tr.querySelector('.r-clicks').value,
+      parseCOP(tr.querySelector('.r-ad').value),
+      tr.querySelector('.r-purchases').value,
+      parseCOP(tr.querySelector('.r-rev').value)
+    ].join(',');
+  });
+  const header = 'date,impressions,clicks,ad_spend_COP,purchases,revenue_COP';
+  const csv = [header].concat(rows).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'ads_data.csv'; a.click();
+  URL.revokeObjectURL(url);
+});
 
-    // Format inputs as COP while typing
-    function attachCurrencyFormatting(el){
-      el.addEventListener('input', (e)=>{
-        const caret = el.selectionStart;
-        const raw = el.value.replace(/[^0-9]/g,'');
-        if(raw.length===0){el.value=''; return}
-        el.value = '$' + parseInt(raw,10).toLocaleString('es-CO');
-        // try to restore caret near end
-        el.setSelectionRange(el.value.length, el.value.length);
-      });
-    }
-    attachCurrencyFormatting(priceSell);
-    attachCurrencyFormatting(priceCost);
-    attachCurrencyFormatting(adSpend);
+/* init with one blank row for convenience */
+addRow();
 
-    function compute() {
-      // Totals for selected range are input by user (we're not fetching data automatically)
-      const qty = Number(sold.value) || 0;
-      const price = parseCOP(priceSell.value);
-      const cost = mode === 'store' ? parseCOP(priceCost.value) : 0;
-      const spend = parseCOP(adSpend.value);
-      const conv = Number(conversions.value) || 0;
-
-      // Revenue = qty * price
-      const revenue = qty * price;
-      // Gross profit per unit = price - cost
-      const grossPer = price - cost;
-      const grossTotal = grossPer * qty;
-      // Margin %
-      const marginPct = revenue === 0 ? 0 : (grossTotal / revenue) * 100;
-      // ROAS = revenue / adSpend
-      const roas = spend === 0 ? (revenue>0? Infinity : 0) : (revenue / spend);
-      // CAC = adSpend / conversions
-      const cac = conv === 0 ? (spend>0? Infinity : 0) : (spend / conv);
-
-      // Averages per day depending on range
-      let days = 1;
-      const range = rangeSelect.value;
-      if(range === 'today' || range === 'yesterday') days = 1;
-      else if(range === '7') days = 7;
-      else if(range === '14') days = 14;
-      // custom uses totals inputted by user
-
-      const avgDailyRevenue = revenue / days;
-      const avgDailySpend = spend / days;
-      const avgDailySales = qty / days;
-
-      // Populate UI
-      revenueEl.textContent = formatCOP(revenue);
-      marginEl.textContent = marginPct.toFixed(1) + '%';
-      roasEl.textContent = (roas === Infinity) ? '∞' : roas.toFixed(2) + 'x';
-      cacEl.textContent = (cac === Infinity) ? '—' : formatCOP(cac);
-
-      // Breakdown
-      breakdown.innerHTML = `
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-          <div><strong>Unidades vendidas:</strong> ${qty}</div>
-          <div><strong>Precio unitario:</strong> ${formatCOP(price)}</div>
-          <div><strong>Costo unitario:</strong> ${formatCOP(cost)}</div>
-          <div><strong>Gasto publicitario:</strong> ${formatCOP(spend)}</div>
-          <div><strong>Conversiones:</strong> ${conv}</div>
-          <div><strong>Ingresos promedio diarios:</strong> ${formatCOP(avgDailyRevenue)}</div>
-          <div><strong>Gasto promedio diario:</strong> ${formatCOP(avgDailySpend)}</div>
-          <div><strong>Ventas promedio diarias:</strong> ${avgDailySales.toFixed(2)}</div>
-          <div><strong>Beneficio bruto total:</strong> ${formatCOP(grossTotal)}</div>
-        </div>
-      `;
-
-      // Health check & recommendations
-      analyzeHealth({roas, marginPct, cac, price, cost, conv, spend});
-
-      // prepare export content for CSV / copy
-      lastComputed = {qty, price, cost, spend, conv, revenue, grossTotal, marginPct, roas, cac, days, avgDailyRevenue, avgDailySpend, avgDailySales, mode, notes: $('notes').value, range};
-
-    }
-
-    function analyzeHealth({roas, marginPct, cac, price, cost, conv, spend}){
-      alertBox.style.display='block';
-      alertBox.style.border = '1px solid rgba(255,255,255,.04)';
-
-      const messages = [];
-      let positiveScore = 0;
-
-      // ROAS thresholds
-      if(roas === Infinity){ messages.push('<strong>ROAS:</strong> Sin gasto publicitario.'); positiveScore+=0.5 }
-      else if(roas >= 3){ messages.push('<strong>ROAS:</strong> Excelente (≥ 3x).'); positiveScore+=2 }
-      else if(roas >= 1.8){ messages.push('<strong>ROAS:</strong> Aceptable (1.8x - 3x).'); positiveScore+=1 }
-      else { messages.push('<strong>ROAS:</strong> Bajo (< 1.8x).'); }
-
-      // Margin
-      if(marginPct >= 30){ messages.push('<strong>Margen:</strong> Saludable (≥ 30%).'); positiveScore+=2 }
-      else if(marginPct >= 15){ messages.push('<strong>Margen:</strong> Moderado (15% - 30%).'); positiveScore+=1 }
-      else { messages.push('<strong>Margen:</strong> Bajo (< 15%).'); }
-
-      // CAC relative check (rule of thumb: CAC < 40% precio venta)
-      const cacThreshold = price * 0.4;
-      if(cac === Infinity){ messages.push('<strong>CAC:</strong> Sin conversiones registradas.'); }
-      else if(cac <= cacThreshold){ messages.push(`<strong>CAC:</strong> Adecuado (≤ ${formatCOP(cacThreshold)}).`); positiveScore+=1 }
-      else{ messages.push(`<strong>CAC:</strong> Alto (> ${formatCOP(cacThreshold)}).`); }
-
-      // Final health
-      let healthText = '';
-      if(positiveScore >= 4) {
-        healthText = `<div style="background:rgba(16,185,129,.08);border-left:4px solid var(--good);padding:8px"><strong style='color:var(--good)'>Salud de campaña: POSITIVA</strong><div style='margin-top:6px'>Buen rendimiento. Sigue optimizando creativos y escala con precaución.</div></div>`;
-      } else if(positiveScore >= 2){
-        healthText = `<div style="background:rgba(250,204,21,.06);border-left:4px solid #f59e0b;padding:8px"><strong style='color:#f59e0b'>Salud de campaña: NEUTRA</strong><div style='margin-top:6px'>Algunos KPI están bien, otros requieren atención: revisa segmentación y la página de destino.</div></div>`;
-      } else {
-        healthText = `<div style="background:rgba(239,68,68,.06);border-left:4px solid var(--bad);padding:8px"><strong style='color:var(--bad)'>Salud de campaña: NEGATIVA</strong><div style='margin-top:6px'>Acciones recomendadas: 1) Revisar creativos y copy. 2) Optimizar la página de destino (velocidad / mensaje). 3) Reducir pujas o pausar grupos con CAC alto. 4) Probar audiencias lookalike y retargeting.</div></div>`;
-      }
-
-      // Combine
-      alertBox.innerHTML = `
-        <div style="font-size:14px;margin-bottom:8px">${healthText}</div>
-        <div style="font-size:13px;color:var(--muted)">${messages.join(' <br/> ')}</div>
-      `;
-    }
-
-    let lastComputed = null;
-
-    calcBtn.addEventListener('click',()=>{ compute(); window.scrollTo({top:0,behavior:'smooth'}) });
-    resetBtn.addEventListener('click',()=>{ sold.value=0; priceSell.value=''; priceCost.value=''; adSpend.value=''; conversions.value=0; revenueEl.textContent='$0'; marginEl.textContent='0%'; roasEl.textContent='0x'; cacEl.textContent='$0'; breakdown.innerHTML='No calculado aún.'; alertBox.style.display='none'; lastComputed=null; });
-
-    exportCsv.addEventListener('click',()=>{
-      if(!lastComputed){ alert('Primero calcule para exportar.'); return }
-      const keys = Object.keys(lastComputed);
-      const csvRows = [];
-      csvRows.push(keys.join(','));
-      csvRows.push(keys.map(k=>`"${String(lastComputed[k]).replace(/"/g,'""')}"`).join(','));
-      const blob = new Blob([csvRows.join('\n')],{type:'text/csv;charset=utf-8;'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = 'calculadora_facebook_ads.csv'; a.click(); URL.revokeObjectURL(url);
-    });
-
-    copyShare.addEventListener('click',()=>{
-      if(!lastComputed){ alert('Primero calcule para copiar.'); return }
-      const txt = `Resumen - Rango: ${lastComputed.range}\nModo: ${lastComputed.mode}\nIngresos: ${formatCOP(lastComputed.revenue)}\nGasto publicitario: ${formatCOP(lastComputed.spend)}\nROAS: ${lastComputed.roas===Infinity? '∞' : lastComputed.roas.toFixed(2) + 'x'}\nCAC: ${lastComputed.cac===Infinity? '—' : formatCOP(lastComputed.cac)}\nMargen: ${lastComputed.marginPct.toFixed(1)}%\nNotas: ${lastComputed.notes || '-'} `;
-      navigator.clipboard.writeText(txt).then(()=>{ alert('Resumen copiado al portapapeles'); }).catch(()=>{ alert('No se pudo copiar. Usa exportar CSV.'); });
-    });
-
-    // Init defaults
-    modeStore.click();
-
-  </script>
+</script>
 </body>
 </html>
