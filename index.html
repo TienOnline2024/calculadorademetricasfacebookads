@@ -1,363 +1,251 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Calculadora Facebook Ads — COP</title>
-  <style>
-    :root{--bg:#0f1724;--card:#0b1220;--accent:#06b6d4;--muted:#94a3b8;--good:#10b981;--bad:#ef4444;--warn:#f59e0b}
-    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,Roboto,'Helvetica Neue',Arial;background:linear-gradient(180deg,#071124 0%, #081826 100%);color:#e6eef6}
-    .wrap{max-width:1100px;margin:28px auto;padding:24px}
-    header{display:flex;align-items:center;gap:16px}
-    header h1{margin:0;font-size:20px}
-    .grid{display:grid;grid-template-columns:1fr 420px;gap:20px;margin-top:18px}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.6)}
-    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
-    .row{display:flex;gap:12px;align-items:center}
-    input[type=text], input[type=number], select{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
-    .field{margin-bottom:12px}
-    .small{font-size:13px;color:var(--muted)}
-    .results{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .result{padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03)}
-    .big{font-size:20px;font-weight:700}
-    .muted{color:var(--muted)}
-    .btn{background:var(--accent);border:none;padding:10px 14px;border-radius:8px;color:#052021;font-weight:600;cursor:pointer}
-    .toggle{display:flex;gap:8px}
-    .alert{padding:12px;border-radius:10px;margin-bottom:12px}
-    .alert.good{background:linear-gradient(90deg, rgba(16,185,129,0.12), rgba(16,185,129,0.04));border:1px solid rgba(16,185,129,0.14);color:var(--good)}
-    .alert.bad{background:linear-gradient(90deg, rgba(239,68,68,0.12), rgba(239,68,68,0.04));border:1px solid rgba(239,68,68,0.14);color:var(--bad)}
-    .alert.warn{background:linear-gradient(90deg, rgba(245,158,11,0.12), rgba(245,158,11,0.04));border:1px solid rgba(245,158,11,0.14);color:var(--warn)}
-    small.note{display:block;color:var(--muted);margin-top:6px}
-    footer{margin-top:14px;color:var(--muted);font-size:13px}
-    @media(max-width:980px){.grid{grid-template-columns:1fr;}.results{grid-template-columns:1fr}}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Calculadora de Efectividad - Facebook Ads</title>
+<style>
+:root{--bg:#0f1724;--card:#0b1220;--accent:#ef4444;--muted:#94a3b8;--glass:rgba(255,255,255,0.03)}
+body{font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;margin:0;background:linear-gradient(180deg,#071029 0%, #081426 100%);color:#e6eef8}
+.wrap{max-width:980px;margin:28px auto;padding:20px}
+header{display:flex;align-items:center;gap:16px}
+h1{margin:0;font-size:20px}
+p.lead{margin:0;color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+label{font-size:12px;color:var(--muted)}
+input[type=number],input[type=text],input[type=date]{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:var(--glass);color:inherit}
+.full{grid-column:span 3}
+.actions{display:flex;gap:8px;margin-top:12px}
+button{background:var(--accent);color:white;padding:10px 14px;border-radius:8px;border:none;cursor:pointer}
+button.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06)}
+.panel{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:16px;border-radius:12px;margin-top:18px}
+.results{display:flex;gap:12px;flex-wrap:wrap}
+.tile{flex:1 1 140px;background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;position:relative}
+.tile b{display:block;font-size:18px}
+.tile .tooltip{font-size:11px;color:var(--muted);position:absolute;bottom:4px;right:4px}
+.rec{margin-top:10px;padding:10px;border-radius:8px;background:rgba(255,255,255,0.02);color:var(--muted)}
+.alert{padding:12px;border-radius:8px;margin-top:12px}
+.alert.loss{background:#3b0f0f;color:#ffd0d0}
+.alert.win{background:#0f2f17;color:#c8ffd6}
+.chart-container{margin-top:20px}
+.date-selector{display:flex;gap:8px;margin-top:12px;align-items:center}
+.quick-buttons button{padding:5px 10px;font-size:12px}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.full{grid-column:span 2}}
+@media(max-width:600px){.grid{grid-template-columns:1fr}.full{grid-column:span 1}}
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <svg width="36"height="36"viewBox="0 0 24 24"fill="none"xmlns="http://www.w3.org/2000/svg"><rect width="24"height="24"rx="6"fill="#052021"/><path d="M6 12h12M6 7h12M6 17h12" stroke="#06b6d4" stroke-width="1.2" stroke-linecap="round"/></svg>
-      <div>
-        <h1>Calculadora Facebook Ads — COP</h1>
-        <div class="small">Calcula ROAS, CAC, margen y salud de campaña. Formato en pesos colombianos.</div>
-      </div>
-    </header>
+<div class="wrap">
+<header>
+<div>
+<h1>Calculadora de Efectividad - Facebook Ads</h1>
+<p class="lead">Introduce los datos de tu campaña y obtén CPA, ROAS, rentabilidad, gráficas y recomendaciones automáticas.</p>
+</div>
+</header>
 
-    <div class="grid">
-      <!-- Left: inputs -->
-      <div class="card">
-        <div id="alertArea"></div>
+<form id="form" onsubmit="return false;">
+<div class="grid">
+<!-- Inputs existentes -->
+<div>
+<label>Impresiones</label>
+<input id="impressions" type="number" min="0" step="1" placeholder="Ej: 50000" />
+</div>
+<div>
+<label>CTR (%)</label>
+<input id="ctr" type="number" min="0" step="0.01" placeholder="Tasa de clics (ej: 1.5)" />
+</div>
+<div>
+<label>CPC (por clic)</label>
+<input id="cpc" type="number" min="0" step="0.01" placeholder="Costo por clic" />
+</div>
+<div>
+<label>CTA (clics en CTA)</label>
+<input id="cta" type="number" min="0" step="1" placeholder="Número de clics a CTA" />
+</div>
+<div>
+<label>Conversaciones iniciadas (conversiones)</label>
+<input id="conversions" type="number" min="0" step="1" placeholder="Conversaciones iniciadas" />
+</div>
+<div>
+<label>Importe gastado (COP)</label>
+<input id="spent" type="number" min="0" step="0.01" placeholder="Gasto total" />
+</div>
+<div>
+<label>Precio de bodega (por unidad)</label>
+<input id="cost_price" type="number" min="0" step="0.01" placeholder="Costo por unidad" />
+</div>
+<div>
+<label>Precio de venta (por unidad)</label>
+<input id="sale_price" type="number" min="0" step="0.01" placeholder="Precio venta por unidad" />
+</div>
+<div>
+<label>Costo aproximado de envío por unidad</label>
+<input id="shipping" type="number" min="0" step="0.01" placeholder="Costo envío" />
+</div>
+<div>
+<label>Cantidad de unidades vendidas</label>
+<input id="units_sold" type="number" min="0" step="1" placeholder="Unidades vendidas" />
+</div>
+<div class="full">
+<label>ROAS (si lo conoces; opcional) — si lo dejas vacío se calculará</label>
+<input id="roas_input" type="number" min="0" step="0.01" placeholder="Ej: 1.8" />
+</div>
+</div>
 
-        <div class="field">
-          <label>Modo</label>
-          <select id="mode">
-            <option value="dropship">Dropshipping (omite costos de bodega)</option>
-            <option value="store">Tienda propia (considera inventario y bodega)</option>
-          </select>
-        </div>
+<!-- Selector de fechas -->
+<div class="date-selector full">
+<label>Desde:</label><input id="fechaInicio" type="date" />
+<label>Hasta:</label><input id="fechaFin" type="date" />
+<div class="quick-buttons">
+<button type="button" onclick="setDateRange('hoy')">Hoy</button>
+<button type="button" onclick="setDateRange('ayer')">Ayer</button>
+<button type="button" onclick="setDateRange('7dias')">Últimos 7 días</button>
+</div>
+</div>
 
-        <div class="field">
-          <label>Rango de fechas</label>
-          <select id="range">
-            <option value="today">Hoy</option>
-            <option value="yesterday">Ayer</option>
-            <option value="7">Últimos 7 días</option>
-            <option value="14">Últimos 14 días</option>
-          </select>
-          <small class="note">La calculadora normaliza promedios según el rango seleccionado.</small>
-        </div>
+<div class="actions">
+<button id="calc">Calcular</button>
+<button id="reset" type="button" class="secondary">Limpiar</button>
+<button id="download" type="button" class="secondary">📥 Descargar Reporte</button>
+</div>
+</form>
 
-        <div class="field">
-          <label>Cantidad de productos vendidos (total en rango)</label>
-          <input id="qtySold" type="text" inputmode="numeric" placeholder="ej. 120" />
-        </div>
+<div class="panel">
+<div class="results" id="results">
+<div class="tile">CPA (Costo por Adquisición) <span class="tooltip" title="Costo promedio para obtener una conversión">(?)</span><b id="out_cpa">-</b></div>
+<div class="tile">ROAS <span class="tooltip" title="Retorno de inversión publicitaria">(?)</span><b id="out_roas">-</b></div>
+<div class="tile">Ingresos <span class="tooltip" title="Total estimado de ingresos">(?)</span><b id="out_revenue">-</b></div>
+<div class="tile">Beneficio Neto Aproximado <span class="tooltip" title="Ingresos menos costos">(?)</span><b id="out_profit">-</b></div>
+<div class="tile">Costo por resultado (Conversación) <span class="tooltip" title="Costo por conversión">(?)</span><b id="out_cost_per_result">-</b></div>
+<div class="tile">Conversion Rate (%) <span class="tooltip" title="Tasa de conversión">(?)</span><b id="out_conv_rate">-</b></div>
+</div>
+<div id="statusAlert"></div>
 
-        <div style="display:flex;gap:12px">
-          <div style="flex:1" class="field">
-            <label>Precio de venta por unidad</label>
-            <input id="price" type="text" inputmode="numeric" placeholder="$139.900" />
-          </div>
+<div class="chart-container">
+<canvas id="chart"></canvas>
+</div>
 
-          <div style="flex:1" class="field">
-            <label>Precio de bodega por unidad (si aplica)</label>
-            <input id="cost" type="text" inputmode="numeric" placeholder="$80.000" />
-          </div>
-        </div>
+<div class="rec" id="recommendations">
+<strong>Recomendaciones automáticas</strong>
+<div id="rec_list" style="margin-top:8px;color:var(--muted)">Aquí aparecerán recomendaciones basadas en los datos ingresados.</div>
+</div>
+</div>
+</div>
 
-        <div class="field">
-          <label>Costos adicionales por unidad (envío, empaque, otros)</label>
-          <input id="extraCost" type="text" inputmode="numeric" placeholder="$8.000" />
-          <small class="note">En dropshipping puede ser el costo del proveedor + envío.</small>
-        </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+let chart = null;
 
-        <div class="field">
-          <label>Gasto total en anuncios (en el rango)</label>
-          <input id="adSpend" type="text" inputmode="numeric" placeholder="$450.000" />
-        </div>
+function fmt(n){return (Math.round((n + Number.EPSILON)*100)/100).toLocaleString('es-CO')}
 
-        <div class="field">
-          <label>Conversiones (clientes nuevos / ventas atribuibles)</label>
-          <input id="conversions" type="text" inputmode="numeric" placeholder="ej. 18" />
-        </div>
+function setDateRange(option){
+  const today = new Date();
+  if(option==='hoy'){
+    $('fechaInicio').valueAsDate = today;
+    $('fechaFin').valueAsDate = today;
+  } else if(option==='ayer'){
+    const ayer = new Date(today); ayer.setDate(today.getDate()-1);
+    $('fechaInicio').valueAsDate = ayer;
+    $('fechaFin').valueAsDate = ayer;
+  } else if(option==='7dias'){
+    const desde = new Date(today); desde.setDate(today.getDate()-6);
+    $('fechaInicio').valueAsDate = desde;
+    $('fechaFin').valueAsDate = today;
+  }
+}
 
-        <div class="field">
-          <label>Número de SKUs / Promedio de precio por orden (opcional)</label>
-          <input id="aov" type="text" inputmode="numeric" placeholder="$200.000 — deja vacío para usar precio de venta" />
-          <small class="note">Si vendes más de 1 producto por pedido, pon el AOV (valor promedio del pedido).</small>
-        </div>
+function calculate(){
+  const impressions = Number($('impressions').value) || 0;
+  const ctr = Number($('ctr').value) || (impressions>0? ((Number($('cta').value)||0)/impressions*100):0);
+  const cpc = Number($('cpc').value) || 0;
+  const cta = Number($('cta').value) || 0;
+  const conversions = Number($('conversions').value) || 0; 
+  const spent = Number($('spent').value) || 0;
+  const cost_price = Number($('cost_price').value) || 0;
+  const sale_price = Number($('sale_price').value) || 0;
+  const shipping = Number($('shipping').value) || 0;
+  const units = Number($('units_sold').value) || 0;
+  const roas_input = Number($('roas_input').value) || null;
 
-        <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
-          <button class="btn" id="calcBtn">Calcular</button>
-          <button class="btn" id="resetBtn" style="background:transparent;border:1px solid rgba(255,255,255,0.05);color:inherit">Limpiar</button>
-        </div>
+  const cpa = conversions>0 ? (spent / conversions) : NaN;
+  const revenue = units * sale_price;
+  const gross_margin_per_unit = sale_price - cost_price - shipping;
+  const total_gross_profit = gross_margin_per_unit * units;
+  const net_profit = total_gross_profit - spent; 
+  const roas = roas_input ? roas_input : (spent>0? (revenue / spent) : NaN);
+  const costPerResult = cpa;
+  const convRate = cta>0? (conversions/cta*100) : (cta===0? 0 : NaN);
 
-        <footer>
-          <div>Consejo: usa el modo <strong>dropshipping</strong> si no sostienes inventario. Para tienda propia incluye precio de bodega y costos fijos en extraCost si aplica.</div>
-        </footer>
-      </div>
+  $('out_cpa').innerText = isFinite(cpa)? ('$ ' + fmt(cpa)) : '-';
+  $('out_roas').innerText = isFinite(roas)? (fmt(roas) + 'x') : '-';
+  $('out_revenue').innerText = '$ ' + fmt(revenue);
+  $('out_profit').innerText = (isFinite(net_profit)? ('$ ' + fmt(net_profit)) : '-') ;
+  $('out_cost_per_result').innerText = isFinite(costPerResult)? ('$ ' + fmt(costPerResult)) : '-';
+  $('out_conv_rate').innerText = isFinite(convRate)? (fmt(convRate) + ' %') : '-';
 
-      <!-- Right: results -->
-      <div class="card">
-        <h3 style="margin-top:0">Resultados</h3>
-        <div class="results" id="resultsGrid">
-          <div class="result">
-            <div class="muted">Ingresos</div>
-            <div id="revenue" class="big">$0</div>
-            <small class="note">Total en el rango seleccionado.</small>
-          </div>
+  const statusDiv = $('statusAlert'); statusDiv.innerHTML = '';
+  const alert = document.createElement('div'); alert.className = 'alert';
+  if(!isFinite(net_profit)){
+    alert.className = 'alert win';
+    alert.innerText = 'Datos incompletos para evaluar rentabilidad.';
+  } else if(net_profit < 0){
+    alert.className = 'alert loss';
+    alert.innerHTML = 'Campaña generando <strong>PÉRDIDAS</strong>: $ ' + fmt(Math.abs(net_profit));
+  } else {
+    alert.className = 'alert win';
+    alert.innerHTML = 'Campaña rentable: beneficio $ ' + fmt(net_profit);
+  }
+  statusDiv.appendChild(alert);
 
-          <div class="result">
-            <div class="muted">Costo total (productos + extra)</div>
-            <div id="totalCost" class="big">$0</div>
-            <small class="note">Incluye costo de bodega/compra + envíos/otros.</small>
-          </div>
+  const recs = generateRecommendations({impressions, ctr, cpc, cta, conversions, spent, revenue, roas, costPerResult, convRate, net_profit, gross_margin_per_unit, sale_price});
+  const recList = $('rec_list'); recList.innerHTML = '';
+  recs.forEach(r=>{const d=document.createElement('div');d.innerText='• '+r;recList.appendChild(d)});
 
-          <div class="result">
-            <div class="muted">Beneficio bruto</div>
-            <div id="grossProfit" class="big">$0</div>
-            <small class="note">Ingresos - (costos + gasto anuncios).</small>
-          </div>
+  renderChart({spent, revenue, net_profit, cpa: cpa, roas});
+}
 
-          <div class="result">
-            <div class="muted">Margen bruto (%)</div>
-            <div id="marginPct" class="big">0%</div>
-            <small class="note">Beneficio bruto ÷ ingresos.</small>
-          </div>
+function generateRecommendations(data){
+  const rec=[];
+  const {ctr, cpc, costPerResult, convRate, net_profit, gross_margin_per_unit, sale_price} = data;
+  if(ctr>0){
+    if(ctr < 0.5) rec.push('CTR bajo: prueba nuevas creatividades.');
+    else if(ctr < 1.2) rec.push('CTR moderado: testea variaciones A/B.');
+    else rec.push('CTR bueno: considera escalar.');
+  }
+  if(cpc>0){
+    if(cpc > gross_margin_per_unit*0.6) rec.push('CPC alto: optimiza pujas.');
+    else rec.push('CPC aceptable.');
+  }
+  if(costPerResult > sale_price) rec.push('CPA mayor que precio de venta: revisar estrategia.');
+  if(convRate < 5) rec.push('Conversión baja: optimiza landing/chat.');
+  if(net_profit < 0) rec.push('Campaña con pérdidas: ajustar costos o precio.');
+  else rec.push('Beneficio positivo: considerar reinversión.');
+  return rec;
+}
 
-          <div class="result">
-            <div class="muted">ROAS (Return on Ad Spend)</div>
-            <div id="roas" class="big">0</div>
-            <small class="note">Ingresos ÷ Gasto en anuncios.</small>
-          </div>
+function renderChart(data){
+  const labels = ['Gasto','Ingresos','Beneficio','CPA','ROAS'];
+  const ds = [data.spent||0,data.revenue||0,data.net_profit||0,(isFinite(data.cpa)? data.cpa:0),(isFinite(data.roas)? data.roas:0)];
+  if(chart) chart.destroy();
+  const ctx = document.getElementById('chart').getContext('2d');
+  chart = new Chart(ctx,{type:'bar',data:{labels,datasets:[{label:'Valores',data:ds}]},options:{responsive:true,scales:{y:{beginAtZero:true}}}});
+}
 
-          <div class="result">
-            <div class="muted">CAC — Costo por adquisición</div>
-            <div id="cac" class="big">$0</div>
-            <small class="note">Gasto anuncios ÷ conversiones.</small>
-          </div>
+$('calc').addEventListener('click',calculate);
+$('reset').addEventListener('click',()=>{
+  document.getElementById('form').reset();
+  document.getElementById('results').querySelectorAll('b').forEach(b=>b.innerText='-');
+  document.getElementById('rec_list').innerText='Aquí aparecerán recomendaciones basadas en los datos ingresados.';
+  if(chart) chart.destroy();
+  document.getElementById('statusAlert').innerHTML='';
+});
 
-        </div>
-
-        <div style="margin-top:12px">
-          <h4 style="margin:6px 0">Promedios por día</h4>
-          <div class="results">
-            <div class="result"><div class="muted">Ventas / día</div><div id="perDaySales" class="big">0</div></div>
-            <div class="result"><div class="muted">Gasto Ads / día</div><div id="adPerDay" class="big">$0</div></div>
-            <div class="result"><div class="muted">Ingreso / día</div><div id="revPerDay" class="big">$0</div></div>
-            <div class="result"><div class="muted">Beneficio / día</div><div id="profitPerDay" class="big">$0</div></div>
-          </div>
-        </div>
-
-        <div style="margin-top:12px" id="recommendationsArea"></div>
-
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // Helper: parse inputs tolerating $ and separators
-    function parseCOP(value){
-      if(value === undefined || value === null) return 0;
-      const v = String(value).replace(/\s+/g,'').replace(/\$/g,'').replace(/₱/g,'').replace(/,/g,'').replace(/\./g,'');
-      // If user used a comma for decimals (rare for COP) handle
-      if(v === '') return 0;
-      const num = parseFloat(v);
-      return isNaN(num) ? 0 : Math.round(num);
-    }
-
-    // Format number to $139.900 (colombian style)
-    function fmtCOP(n){
-      const sign = n < 0 ? '-' : '';
-      const v = Math.abs(Math.round(n));
-      return sign + '$' + v.toLocaleString('es-CO');
-    }
-
-    function safeDivide(a,b){return (b === 0) ? 0 : (a/b);
-    }
-
-    function daysInRange(range){
-      if(range === 'today' || range === 'yesterday') return 1;
-      const n = parseInt(range,10);
-      return (isNaN(n) || n<=0) ? 1 : n;
-    }
-
-    function showAlert(type, html){
-      const area = document.getElementById('alertArea');
-      area.innerHTML = `<div class="alert ${type}">${html}</div>`;
-    }
-    function clearAlert(){document.getElementById('alertArea').innerHTML='';}
-
-    function showRecommendations(lines,type){
-      const out = document.getElementById('recommendationsArea');
-      const cls = type==='good' ? 'good' : (type==='warn' ? 'warn' : 'bad');
-      out.innerHTML = `<div class="alert ${cls}"><strong>Recomendaciones</strong><ul style="margin:8px 0 0 18px">${lines.map(l=>`<li>${l}</li>`).join('')}</ul></div>`;
-    }
-
-    document.getElementById('calcBtn').addEventListener('click', compute);
-    document.getElementById('resetBtn').addEventListener('click', ()=>{document.querySelectorAll('input[type=text]').forEach(i=>i.value=''); clearDisplay(); clearAlert(); document.getElementById('recommendationsArea').innerHTML='';});
-
-    function clearDisplay(){
-      ['revenue','totalCost','grossProfit','marginPct','roas','cac','perDaySales','adPerDay','revPerDay','profitPerDay'].forEach(id=>document.getElementById(id).innerText = id==='marginPct' ? '0%': (id==='perDaySales'?'0':'$0'));
-      document.getElementById('roas').innerText='0';
-    }
-
-    function compute(){
-      // Read inputs
-      const mode = document.getElementById('mode').value;
-      const range = document.getElementById('range').value;
-      const days = daysInRange(range);
-
-      const qtySold = parseCOP(document.getElementById('qtySold').value);
-      const price = parseCOP(document.getElementById('price').value);
-      const cost = parseCOP(document.getElementById('cost').value);
-      const extraCost = parseCOP(document.getElementById('extraCost').value);
-      const adSpend = parseCOP(document.getElementById('adSpend').value);
-      const conv = parseCOP(document.getElementById('conversions').value);
-      const aov = parseCOP(document.getElementById('aov').value);
-
-      // Derived
-      const revenue = (aov>0) ? (aov * conv) : (qtySold * price);
-
-      // For dropship: assume cost includes supplier and shipping; if user left cost 0, we'll estimate cost as 60% of price (configurable)
-      let unitCost = cost;
-      if(mode === 'dropship'){
-        if(unitCost <= 0){ unitCost = Math.round(price * 0.6); } // default estimate
-      }
-
-      const productCostTotal = qtySold * unitCost;
-      const extraTotal = qtySold * extraCost;
-      const totalCost = productCostTotal + extraTotal;
-
-      // Gross profit = revenue - totalCost - adSpend
-      const grossProfit = revenue - totalCost - adSpend;
-      const marginPct = revenue === 0 ? 0 : Math.round((grossProfit / revenue) * 10000)/100; // two decimals
-
-      const roas = adSpend === 0 ? (revenue>0 ? Infinity : 0) : (revenue / adSpend);
-      const cac = conv === 0 ? 0 : Math.round(adSpend / conv);
-
-      // Per-day
-      const perDaySales = Math.round(qtySold / days * 100)/100;
-      const adPerDay = Math.round(adSpend / days);
-      const revPerDay = Math.round(revenue / days);
-      const profitPerDay = Math.round(grossProfit / days);
-
-      // Show results
-      document.getElementById('revenue').innerText = fmtCOP(revenue);
-      document.getElementById('totalCost').innerText = fmtCOP(totalCost);
-      document.getElementById('grossProfit').innerText = fmtCOP(grossProfit);
-      document.getElementById('marginPct').innerText = (isFinite(marginPct)? (marginPct.toFixed(2)+'%') : '0%');
-      document.getElementById('roas').innerText = (roas === Infinity) ? '—' : (Math.round(roas*100)/100).toString();
-      document.getElementById('cac').innerText = fmtCOP(cac);
-
-      document.getElementById('perDaySales').innerText = perDaySales.toLocaleString('es-CO');
-      document.getElementById('adPerDay').innerText = fmtCOP(adPerDay);
-      document.getElementById('revPerDay').innerText = fmtCOP(revPerDay);
-      document.getElementById('profitPerDay').innerText = fmtCOP(profitPerDay);
-
-      // Health logic & recommendations
-      // Thresholds (editable):
-      // ROAS: <1 bad, 1-1.5 warn, >1.5 ok; Margin: <0 loss, 0-15% warn, >15% good
-      const recs = [];
-      let healthType = 'good';
-
-      if(revenue <= 0){
-        showAlert('bad', 'No hay ingresos registrados para el rango seleccionado. Verifica cantidad de ventas o precios.');
-        healthType='bad';
-        recs.push('Verifica que el número de ventas y el precio de venta estén correctos.');
-      }
-
-      if(!isFinite(roas) || roas === 0){
-        recs.push('Gasto en anuncios es 0 o no hay ingresos atribuidos. Si estás haciendo pruebas, añade gasto real para medir ROAS.');
-      }
-
-      if(roas !== Infinity && roas < 1){
-        // terrible
-        showAlert('bad', `ROAS bajo (${Math.round(roas*100)/100}). Estás gastando más en anuncios de lo que recuperas.`);
-        healthType='bad';
-        recs.push('Reducir CPA: optimiza audiencias, detener anuncios con CTR bajo, mejorar creativos y landing page.');
-        recs.push('Revisa costos: negocia con proveedores o sube el precio si el mercado lo permite.');
-      } else if(roas !== Infinity && roas < 1.5){
-        showAlert('warn', `ROAS moderado (${Math.round(roas*100)/100}). Posible riesgo.`);
-        healthType='warn';
-        recs.push('Mejorar la calidad del tráfico: optimiza segmentación y pruebas A/B en anuncios.');
-        recs.push('Reduce costos por envío o agrega upsells para aumentar AOV.');
-      } else {
-        // good roas
-        if(grossProfit < 0){
-          showAlert('bad', `Ingresos OK pero hay pérdida neta: beneficio bruto negativo ${fmtCOP(grossProfit)}.`);
-          healthType='bad';
-          recs.push('Aumenta precio o reduce costos variables; revisa ad targeting para ventas con mayor AOV.');
-        } else {
-          showAlert('good', `Salud positiva — ROAS ${ (roas===Infinity?'—':(Math.round(roas*100)/100)) } y margen ${ (isFinite(marginPct)?marginPct.toFixed(2)+'%':'0%') }`);
-          healthType='good';
-          recs.push('Escala lo que funciona: duplica creativos con mejor rendimiento y prueba audiencias similares (lookalike).');
-          recs.push('Considera invertir más en canales con buen ROAS y añade ofertas/paquetes para mejorar AOV.');
-        }
-      }
-
-      // Additional checks for dropshipping vs store
-      if(mode === 'dropship'){
-        if(unitCost > price * 0.8){
-          recs.push('En dropshipping el costo por unidad es muy alto en relación al precio de venta; negocia con proveedor o aumenta precio.');
-        }
-      } else {
-        // store
-        if(extraCost > 0 && (extraCost + unitCost) > price * 0.85){
-          recs.push('Costos logísticos + costo de bodega están consumiendo la mayoría del precio; optimiza empaques o tarifas de envío.');
-        }
-      }
-
-      // CAC sanity check
-      if(conv > 0 && (adSpend/conv) > price){
-        recs.push('El CAC es mayor que el precio medio del pedido: o reduces CAC o aumentas AOV.');
-      }
-
-      showRecommendations(recs, healthType);
-    }
-
-    // Format inputs as user types (adds thousand separators)
-    function formatInputAsCOP(el){
-      const start = el.selectionStart;
-      let raw = el.value.replace(/\D/g,'');
-      if(raw === ''){ el.value=''; return; }
-      raw = parseInt(raw,10).toString();
-      el.value = '$' + Number(raw).toLocaleString('es-CO');
-      // naive caret restore
-    }
-
-    ['qtySold','price','cost','extraCost','adSpend','conversions','aov'].forEach(id=>{
-      const el = document.getElementById(id);
-      el.addEventListener('input', (e)=>{
-        // allow only digits and format
-        const t = e.target;
-        const clean = t.value.replace(/[^0-9]/g,'');
-        if(clean === ''){ t.value = ''; return; }
-        t.value = '$'+Number(clean).toLocaleString('es-CO');
-      });
-    });
-
-    // initial
-    clearDisplay();
-  </script>
+$('ctr').addEventListener('input',()=>{
+  const imp = Number($('impressions').value)||0;
+  const ctr = Number($('ctr').value)||0;
+  if(imp && ctr) $('cta').placeholder = 'Estimado: '+Math.round(imp*ctr/100)+' clics';
+});
+</script>
 </body>
 </html>
-
